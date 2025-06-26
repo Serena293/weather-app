@@ -1,0 +1,21 @@
+.my-container{
+  border: solid black 1px;
+  min-width: 100px;
+  max-width: 250px;
+  min-height: 300px;
+  max-width: 300px;
+}
+
+/* WeatherCard styles */
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-container {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;    
+}
+
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+}
