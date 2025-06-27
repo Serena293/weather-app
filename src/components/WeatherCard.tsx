@@ -1,9 +1,28 @@
 const WeatherCard = () => {
+   const handleAddToFavorites = () => {
+    console.log("City added to favorites!");
+  };
+
+
+
   return (
     <section className="container">
-    <div className="col-lg-3 col-md-6 my-5 p-4 shadow rounded bg-light">
+      
+   
+         <div className="col-lg-3 col-md-6 my-5 p-4 bg-light shadow rounded position-relative">
+        
+        <div className="d-flex justify-content-end">
+          <button
+            className="btn btn-outline-warning border-0 my-0 py-0"
+            onClick={handleAddToFavorites}
+            aria-label="Add to favorites"
+          >
+            <i className="bi bi-star fs-5"></i>
+          </button>
+        </div>
       <div className="mb-4">
-        <h1 className="text-center fs-2 mb-1">Portobello</h1>
+        <h1 className="text-center fs-2 mb-1">Portobello</h1> 
+
         <p className="text-center text-secondary mb-0">
           It never rains in Portobello
         </p>
