@@ -1,6 +1,7 @@
 const WeatherCard = () => {
   return (
-    <section className="container my-5 p-4 shadow rounded bg-light">
+    <section className="container">
+    <div className="col-lg-3 col-md-6 my-5 p-4 shadow rounded bg-light">
       <div className="mb-4">
         <h1 className="text-center fs-2 mb-1">Portobello</h1>
         <p className="text-center text-secondary mb-0">
@@ -72,19 +73,19 @@ const WeatherCard = () => {
 
       <div>
         <p className="ms-3 fw-semibold">Next five days forecast:</p>
-        <div className="d-flex flex-row overflow-auto px-3 gap-3 scroll-container">
-          <div className="row justify-content-around text-center">
-            {["Friday", "Saturday", "Sunday", "Monday", "Tuesday"].map(
-              (day, idx) => (
-                <div key={idx} className="col-4 col-sm-2 mb-3">
-                  <p className="mb-1">{day}</p>
-                  <i className="bi bi-brightness-high-fill fs-2 text-warning"></i>
-                </div>
-              )
-            )}
-          </div>
-        </div>
+      <div className="d-flex flex-row overflow-auto px-3 gap-3 text-center scroll-container">
+  {["Friday", "Saturday", "Sunday", "Monday", "Tuesday"].map(
+    (day, idx) => (
+      <div key={idx} className="flex-shrink-0 mb-3">
+        <p className="mb-1">{day}</p>
+        <i className="bi bi-brightness-high-fill fs-2 text-warning"></i>
       </div>
+    )
+  )}
+</div>
+
+      </div>
+    </div>
     </section>
   );
 };
