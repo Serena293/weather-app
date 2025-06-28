@@ -1,40 +1,51 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { AsyncPaginate } from "react-select-async-paginate";
+import { GEO_API_URL, geoApiOptions } from "../api";
+import type { CityOption, SearchBarProps, GeoCity } from "../types";
+import axios from "axios";
 
-type SearchBarProps = {
-  onSearch: (city: string) => void;
-};
+const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
+  const [search, setSearch] = useState<CityOption | null>(null);
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [input, setInput] = useState("");
+  const loadOptions = async (inputValue: string) => {
+    try {
+      const response = await axios.request(
+        {
+          ...geoApiOptions,
+          params: {
+            namePrefix: inputValue,
+          
+          },
+        }
+      );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onSearch(input.trim());
-      setInput(""); 
+      const options = response.data.data.map((city: GeoCity) => ({
+        value: `${city.latitude} ${city.longitude}`,
+        label: `${city.name}, ${city.countryCode}`,
+      }));
+
+      return {
+        options,
+      };
+    } catch (error) {
+      console.error("Errore nella fetch delle città:", error);
+      return { options: [] };
     }
   };
 
+  const handleOnChange = (selectedOption: CityOption | null) => {
+    setSearch(selectedOption);
+    onSearchChange(selectedOption);
+  };
+
   return (
-    <div className="d-flex justify-content-center my-4">
-      <form 
-        onSubmit={handleSubmit} 
-        className="d-flex w-100" 
-        style={{ maxWidth: '400px' }}
-      >
-        <input
-          type="text"
-          className="form-control me-2"
-          placeholder="Search city..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          aria-label="Search city"
-        />
-        <button type="submit" className="btn btn-dark">
-          Search
-        </button>
-      </form>
-    </div>
+    <AsyncPaginate
+      placeholder="Search for city"
+      debounceTimeout={600}
+      value={search}
+      onChange={handleOnChange}
+      loadOptions={loadOptions}
+    />
   );
 };
 

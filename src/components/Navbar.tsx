@@ -4,7 +4,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark">
       <div className="container">
-        <a className="navbar-brand" href="/"><img src="/pwa-192x192.png" alt="App logo" width={60} height={60} />
+        <a className="navbar-brand" href="/"><img src="/pwa-512x512.png" alt="App logo" width={60} height={60} />
 </a>
         <button
           className="navbar-toggler"
