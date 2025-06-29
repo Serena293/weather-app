@@ -4,20 +4,17 @@ import { GEO_API_URL, geoApiOptions } from "../api";
 import type { CityOption, SearchBarProps, GeoCity } from "../types";
 import axios from "axios";
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [search, setSearch] = useState<CityOption | null>(null);
 
   const loadOptions = async (inputValue: string) => {
     try {
-      const response = await axios.request(
-        {
-          ...geoApiOptions,
-          params: {
-            namePrefix: inputValue,
-          
-          },
-        }
-      );
+      const response = await axios.request({
+        ...geoApiOptions,
+        params: {
+          namePrefix: inputValue,
+        },
+      });
 
       const options = response.data.data.map((city: GeoCity) => ({
         value: `${city.latitude} ${city.longitude}`,
@@ -35,7 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
 
   const handleOnChange = (selectedOption: CityOption | null) => {
     setSearch(selectedOption);
-    onSearchChange(selectedOption);
+    onSearch(selectedOption);
   };
 
   return (
