@@ -1,17 +1,14 @@
-import type { WeatherData, ForecastData } from "../types";
+import type { WeatherData, ForecastData, WeatherCardProps } from "../types";
 
-interface WeatherCardProps {
-  data: WeatherData | null;
-  forecast: ForecastData | null;
-}
-
-const WeatherCard: React.FC<WeatherCardProps> = ({ data, forecast }) => {
+const WeatherCard: React.FC<WeatherCardProps> = ({
+  data,
+  forecast,
+  onRemove,
+  onToggleFavorite,
+  isFavorite,
+}) => {
   if (!data) return null;
   if (!forecast) return <p className="text-center mt-5">Loading forecast...</p>;
-
-  const handleAddToFavorites = () => {
-    console.log("City added to favorites!");
-  };
 
   // Filtra le previsioni per oggi
   const today = new Date().getDate();
@@ -20,16 +17,15 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, forecast }) => {
     return itemDate.getDate() === today;
   });
 
-  // Estrai un'icona per ogni giorno futuro
   const dailyForecastMap = new Map<string, ForecastData["list"][0]>();
   forecast.list.forEach((item) => {
-    const date = item.dt_txt.split(" ")[0]; // "2025-06-28"
+    const date = item.dt_txt.split(" ")[0];
     if (!dailyForecastMap.has(date)) {
       dailyForecastMap.set(date, item);
     }
   });
   const dailyForecasts = Array.from(dailyForecastMap.entries())
-    .slice(1, 6) // salta oggi, mostra 5 giorni
+    .slice(1, 6)
     .map(([date, item]) => ({
       date,
       icon: item.weather[0].icon,
@@ -44,13 +40,24 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, forecast }) => {
     <section className="container">
       <div className="col-lg-3 col-md-6 my-5 p-4 bg-light shadow rounded position-relative">
         <div className="d-flex justify-content-end">
-          <button
+          {/* <button
             className="btn btn-outline-warning border-0 my-0 py-0"
             onClick={handleAddToFavorites}
             aria-label="Add to favorites"
           >
             <i className="bi bi-star fs-5"></i>
+          </button> */}
+          <button onClick={onToggleFavorite} className="btn btn-light">
+            {isFavorite ? "⭐" : "☆"}
           </button>
+
+          {onRemove && (
+            <button
+              className="btn btn-close"
+              aria-label="Remove card"
+              onClick={onRemove}
+            ></button>
+          )}
         </div>
 
         <div className="mb-4">
@@ -77,9 +84,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ data, forecast }) => {
           <div className="d-flex flex-row overflow-auto px-3 gap-3 scroll-container">
             {todayForecast.map((item) => (
               <div key={item.dt} className="text-center">
-                <p className="my-0">
-                  {new Date(item.dt_txt).getHours()}:00
-                </p>
+                <p className="my-0">{new Date(item.dt_txt).getHours()}:00</p>
                 <img
                   src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
                   alt={item.weather[0].description}

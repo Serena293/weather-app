@@ -37,6 +37,13 @@ export interface WeatherData {
   };
 }
 
+export interface WeatherEntry {
+    id: number;
+  weatherData: WeatherData;
+  forecastData: ForecastData;
+  isFavorite?: boolean;
+}
+
 
 export interface ForecastItem {
   dt: number;
@@ -67,4 +74,12 @@ export interface ForecastData {
     country: string;
     timezone: number;
   };
+}
+
+ export interface WeatherCardProps {
+  data: WeatherData | null;
+  forecast: ForecastData | null;
+  onRemove?: () => void;
+  onToggleFavorite: () => void;
+  isFavorite?: boolean;
 }
