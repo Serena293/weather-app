@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AsyncPaginate } from "react-select-async-paginate";
-import { GEO_API_URL, geoApiOptions } from "../api";
+import { geoApiOptions } from "../api";
 import type { CityOption, SearchBarProps, GeoCity } from "../types";
 import axios from "axios";
 
@@ -13,6 +13,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         ...geoApiOptions,
         params: {
           namePrefix: inputValue,
+          minPopulation: 40000,
+          sortDirectives: ["-population"],
         },
       });
 

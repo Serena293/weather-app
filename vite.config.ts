@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  server: {
+    host: true // 👈 permette accesso da altri dispositivi
+  },
   plugins: [
     react(),
     VitePWA({

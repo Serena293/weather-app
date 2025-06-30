@@ -1,11 +1,12 @@
-// import React from 'react';
+import type { NavbarProps } from "../types";
 
-const Navbar = () => {
+const Navbar = ({ onUseGeolocation }: NavbarProps) => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark">
       <div className="container">
-        <a className="navbar-brand" href="/"><img src="/pwa-512x512.png" alt="App logo" width={60} height={60} />
-</a>
+        <a className="navbar-brand" href="/">
+          <img src="/pwa-512x512.png" alt="App logo" width={60} height={60} />
+        </a>
         <button
           className="navbar-toggler"
           type="button"
@@ -17,17 +18,30 @@ const Navbar = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <a className="nav-link" href="/">Home</a>
+              <a className="nav-link" href="/">
+                Home
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/about">About</a>
+              <a
+                className="nav-link"
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onUseGeolocation();
+                }}
+              >
+                📍 Use my location
+              </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/contact">Contact</a>
+              <a className="nav-link" href="/contact">
+                Contact
+              </a>
             </li>
           </ul>
         </div>

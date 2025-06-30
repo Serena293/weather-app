@@ -1,4 +1,4 @@
-import type { WeatherData, ForecastData, WeatherCardProps } from "../types";
+import type {ForecastData, WeatherCardProps } from "../types";
 
 const WeatherCard: React.FC<WeatherCardProps> = ({
   data,

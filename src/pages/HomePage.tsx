@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import SearchBar from "../components/Searchbar";
+import SearchBar from "../components/SearchBar";
 import WeatherCard from "../components/WeatherCard";
 import type { CityOption } from "../types";
 import { WEATHER_API_URL, FORECAST_URL, WEATHER_API_KEY } from "../api";
-import type { WeatherData, ForecastData, WeatherEntry } from "../types";
+import type { WeatherEntry } from "../types";
 
 const HomePage = () => {
   const [weatherEntries, setWeatherEntries] = useState<WeatherEntry[]>(() => {
@@ -95,32 +95,91 @@ const HomePage = () => {
       console.error("Errore nella fetch del meteo o delle previsioni:", error);
     }
   };
+  
+  //Geolocation
+  const handleGeolocation = () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+
+      try {
+        const currentRes = await axios.get(WEATHER_API_URL, {
+          params: {
+            lat: latitude,
+            lon: longitude,
+            appid: WEATHER_API_KEY,
+            units: "metric",
+            lang: "en",
+          },
+        });
+
+        const forecastRes = await axios.get(FORECAST_URL, {
+          params: {
+            lat: latitude,
+            lon: longitude,
+            appid: WEATHER_API_KEY,
+            units: "metric",
+            lang: "en",
+          },
+        });
+
+        const newEntry: WeatherEntry = {
+          id: Date.now(),
+          weatherData: currentRes.data,
+          forecastData: forecastRes.data,
+          isFavorite: false, 
+        };
+
+        setWeatherEntries((prev) => [...prev, newEntry]);
+      } catch (error) {
+        console.error("Errore nella fetch del meteo:", error);
+        alert("Could not fetch weather for your location");
+      }
+    },
+    (error) => {
+      console.error("Geolocation error:", error);
+      alert("Unable to retrieve your location");
+    }
+  );
+};
 
   return (
     <div className="app-wrapper d-flex flex-column min-vh-100">
-      <Navbar />
+      <Navbar onUseGeolocation={handleGeolocation}/>
       <div className="my-2 p-4">
         <SearchBar onSearch={handleSearch} />
       </div>
 
-      <main className="flex-grow-1 d-flex flex-wrap justify-content-center align-items-start gap-4 p-4">
-        {weatherEntries.length === 0 ? (
-          <p className="fs-4 text-secondary text-center">
-            Select a city to see the weather 🌤️
-          </p>
-        ) : (
-          weatherEntries.map((entry) => (
-            <WeatherCard
-              key={`${entry.id}`}
-              data={entry.weatherData}
-              forecast={entry.forecastData}
-              onRemove={() => handleRemove(entry.id)}
-              onToggleFavorite={() => toggleFavorite(entry.id)}
-              isFavorite={entry.isFavorite}
-            />
-          ))
-        )}
-      </main>
+<main className="flex-grow-1">
+
+  {weatherEntries.length === 0 ? (
+    <p className="fs-4 text-secondary text-center w-100">
+      Select a city to see the weather 🌤️
+    </p>
+  ) : (
+    <div className="row justify-content-center g-4">
+      {weatherEntries.map((entry) => (
+        <div key={entry.id} >
+          <WeatherCard
+            data={entry.weatherData}
+            forecast={entry.forecastData}
+            onRemove={() => handleRemove(entry.id)}
+            onToggleFavorite={() => toggleFavorite(entry.id)}
+            isFavorite={entry.isFavorite}
+          />
+        </div>
+      ))}
+    </div>
+  )}
+
+</main>
+
+
 
       <Footer />
     </div>

@@ -27,6 +27,7 @@ export interface WeatherData {
     temp_min: number;
     temp_max: number;
     humidity: number;
+    pressure:number
   };
   weather: {
     description: string;
@@ -83,3 +84,8 @@ export interface ForecastData {
   onToggleFavorite: () => void;
   isFavorite?: boolean;
 }
+
+
+export type NavbarProps = {
+  onUseGeolocation: () => void;
+};
