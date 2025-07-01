@@ -19,3 +19,10 @@
 .scroll-snap-x {
   scroll-snap-type: x mandatory;
 }
+
+.img-size {
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+}
+

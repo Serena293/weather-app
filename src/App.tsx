@@ -4,6 +4,7 @@ import './App.css'
 import HomePage from './pages/HomePage'
 import Contact from './pages/Contact'
 import { Route,Routes } from 'react-router-dom'
+import About from './pages/About'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
     <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path='/about' element={<About/>} />
       </Routes>
     </BrowserRouter>
     </>
