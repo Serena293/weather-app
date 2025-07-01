@@ -1,4 +1,4 @@
-import type {ForecastData, WeatherCardProps } from "../types";
+import type { ForecastData, WeatherCardProps } from "../types";
 
 const WeatherCard: React.FC<WeatherCardProps> = ({
   data,
@@ -37,8 +37,8 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
   };
 
   return (
-    <section className="container">
-      <div className="col-lg-3 col-md-6 my-5 p-4 bg-light shadow rounded position-relative">
+    <section className="">
+      <div className="my-5 p-4 bg-light shadow rounded position-relative">
         <div className="d-flex justify-content-end">
           {/* <button
             className="btn btn-outline-warning border-0 my-0 py-0"
@@ -95,22 +95,21 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
             ))}
           </div>
         </div>
-
-        <div className="container text-center my-4">
-          <div className="row g-3">
-            <div className="col-6 col-md-3">
+        <div className="container my-4">
+          <div className="row row-cols-2 row-cols-md-2 gy-4 gx-5 text-center">
+            <div className="col">
               <p className="mb-1 fw-medium">Wind</p>
               <p className="mb-0">{data.wind.speed} km/h</p>
             </div>
-            <div className="col-6 col-md-3">
+            <div className="col">
               <p className="mb-1 fw-medium">Pressure</p>
               <p className="mb-0">{data.main.pressure} hPa</p>
             </div>
-            <div className="col-6 col-md-3">
+            <div className="col">
               <p className="mb-1 fw-medium">Humidity</p>
               <p className="mb-0">{data.main.humidity} %</p>
             </div>
-            <div className="col-6 col-md-3">
+            <div className="col">
               <p className="mb-1 fw-medium">Feels like</p>
               <p className="mb-0">{Math.round(data.main.feels_like)} °C</p>
             </div>

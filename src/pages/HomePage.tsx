@@ -162,9 +162,10 @@ const HomePage = () => {
       Select a city to see the weather 🌤️
     </p>
   ) : (
-    <div className="row justify-content-center g-4">
+    <div className="container">
+      <div className="row">
       {weatherEntries.map((entry) => (
-        <div key={entry.id} >
+        <div className="col-lg-4 col-md-6 col-sm-1" key={entry.id} >
           <WeatherCard
             data={entry.weatherData}
             forecast={entry.forecastData}
@@ -174,6 +175,7 @@ const HomePage = () => {
           />
         </div>
       ))}
+    </div>
     </div>
   )}
 
