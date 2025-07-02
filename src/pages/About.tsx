@@ -1,7 +1,9 @@
 import edinburghImg from "../assets/edinburgh.jpg";
 import projectImg from "../assets/project.png";
+import { useNavigate } from "react-router-dom";
 
 const About = () => {
+  const navigate = useNavigate();
   return (
     <div className="container py-5 bg-secondary">
       <h1 className="text-center mb-4">About Me</h1>
@@ -51,7 +53,7 @@ const About = () => {
           />
         </div>
       </div>
-
+      {/* 
       <div className="row align-items-center">
         <div className="col-md-4 text-center">
           <img
@@ -67,6 +69,15 @@ const About = () => {
             share my passion and hopefully collect useful feedback.
           </p>
         </div>
+      </div> */}
+      <div className="d-flex align-content-start">
+        {" "}
+        <button
+          className="btn btn-outline-secondary bg-dark text-white"
+          onClick={() => navigate("/")}
+        >
+          Back to Home
+        </button>
       </div>
     </div>
   );
