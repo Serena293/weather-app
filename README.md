@@ -1,3 +1,24 @@
+# Weather App 🌦️
+
+A simple and responsive weather app built with React and TypeScript using Vite.  
+It fetches real-time weather data and works offline thanks to PWA support.
+
+## 🚀 Technologies Used
+
+- **React** + **TypeScript**
+- **Vite**
+- **Bootstrap** for responsive layout
+- **OpenWeather API**
+- **RapidAPI**
+- **Progressive Web App (PWA)** for offline use
+
+## 📱 Features
+
+- Current weather information based on city input
+- Offline access via PWA
+- Mobile-first, responsive design
+
+  _____________________________
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
