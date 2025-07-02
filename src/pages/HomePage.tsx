@@ -151,32 +151,32 @@ const HomePage = () => {
   return (
     <div className="app-wrapper d-flex flex-column min-vh-100">
       <Navbar onUseGeolocation={handleGeolocation}/>
-      <div className="my-2 p-4">
+      <div className="p-4 bg-secondary">
         <SearchBar onSearch={handleSearch} />
       </div>
 
-<main className="flex-grow-1">
+<main className="flex-grow-1 bg-secondary">
 
   {weatherEntries.length === 0 ? (
-    <p className="fs-4 text-secondary text-center w-100">
+    <p className="fs-4 text-secondary text-center w-100 text-dark">
       Select a city to see the weather 🌤️
     </p>
   ) : (
-    <div className="container">
-      <div className="row">
-      {weatherEntries.map((entry) => (
-        <div className="col-lg-4 col-md-6 col-sm-1" key={entry.id} >
-          <WeatherCard
-            data={entry.weatherData}
-            forecast={entry.forecastData}
-            onRemove={() => handleRemove(entry.id)}
-            onToggleFavorite={() => toggleFavorite(entry.id)}
-            isFavorite={entry.isFavorite}
-          />
-        </div>
-      ))}
-    </div>
-    </div>
+   <div className="container">
+  <div className="row g-3"> 
+    {weatherEntries.map((entry) => (
+      <div className="col-12 col-md-6 col-lg-4 mb-5" key={entry.id}>
+        <WeatherCard
+          data={entry.weatherData}
+          forecast={entry.forecastData}
+          onRemove={() => handleRemove(entry.id)}
+          onToggleFavorite={() => toggleFavorite(entry.id)}
+          isFavorite={entry.isFavorite}
+        />
+      </div>
+    ))}
+  </div>
+</div>
   )}
 
 </main>

@@ -1,0 +1,14 @@
+@use "sass:color";
+
+$primary:#abfffb;
+$secondary: #e0f4f8;
+
+// $success: #9DB17C;
+// $warning: #9cde9f;
+// $danger: #e63946;
+$info: #1768AC;
+$light: #ffffff;
+$dark: #02143c;
+
+
+@import "bootstrap/scss/bootstrap";

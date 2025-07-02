@@ -1,10 +1,9 @@
-import React from "react";
 import edinburghImg from "../assets/edinburgh.jpg";
 import projectImg from "../assets/project.png";
 
 const About = () => {
   return (
-    <div className="container my-5">
+    <div className="container py-5 bg-secondary">
       <h1 className="text-center mb-4">About Me</h1>
 
       <div className="row align-items-center mb-5">
