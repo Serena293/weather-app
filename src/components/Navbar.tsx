@@ -7,19 +7,7 @@ const Navbar = ({ onUseGeolocation }: NavbarProps) => {
         <a className="navbar-brand" href="/">
           <img src="/pwa-512x512.png" alt="App logo" width={60} height={60} />
         </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarNav">
+             
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <a
@@ -35,7 +23,7 @@ const Navbar = ({ onUseGeolocation }: NavbarProps) => {
             </li>
           </ul>
         </div>
-      </div>
+
     </nav>
   );
 };
