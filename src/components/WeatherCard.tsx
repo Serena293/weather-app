@@ -16,7 +16,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
       return new URL(`../assets/icons/${iconCode}.png`, import.meta.url).href;
     } catch (e) {
       console.error(`Icon not found: ${iconCode}.png`);
-      return new URL(`../assets/icons/01d.png`, import.meta.url).href; // Icona di fallback
+      return new URL(`../assets/icons/01d.png`, import.meta.url).href; 
     }
   };
 
@@ -29,11 +29,10 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
 
   // Previsioni giornaliere (un dato per giorno)
   const dailyForecastMap = new Map<string, ForecastData["list"][0]>();
-  const currentHour = now.getHours();
 
   forecast.list.forEach((item) => {
     const itemDate = new Date(item.dt_txt);
-    // Prendiamo le previsioni delle 12:00 o la prima disponibile dopo le 12:00
+ 
     if (itemDate.getHours() >= 12 || (itemDate.getDate() !== now.getDate() && itemDate.getHours() > 0)) {
       const dateKey = itemDate.toISOString().split('T')[0];
       if (!dailyForecastMap.has(dateKey)) {
@@ -42,7 +41,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
     }
   });
 
-  // Otteniamo i prossimi 5 giorni (incluso oggi se siamo prima delle 12:00)
+  // prossimi 5 giorni 
   const dailyForecasts = Array.from(dailyForecastMap.entries())
     .sort((a, b) => new Date(a[0]).getTime() - new Date(b[0]).getTime())
     .slice(0, 5)
@@ -60,7 +59,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
   return (
     <section className="h-100">
       <div className="my-3 p-3 bg-primary shadow rounded position-relative h-100 d-flex flex-column">
-        {/* Header con pulsanti */}
+    
         <div className="d-flex justify-content-end gap-2"> 
           <button onClick={onToggleFavorite} className="btn btn-primary fs-4 p-1">
             {isFavorite ? "⭐" : "☆"}

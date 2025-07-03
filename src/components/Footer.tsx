@@ -10,7 +10,6 @@ const Footer = () => {
         <div>
           <Link to="/about" className="text-white text-decoration-none me-3">About</Link>
           <Link to="/contact" className="text-white text-decoration-none me-3">Contact</Link>
-          {/* <a href="/privacy" className="text-white text-decoration-none">Privacy</a> */}
         </div>
       </div>
     </footer>
