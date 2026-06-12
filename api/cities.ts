@@ -1,23 +1,37 @@
-import {
-  allowGetOnly,
-  getQueryValue,
-  sendApiError,
-  type ApiRequest,
-  type ApiResponse,
-} from "./_http";
-import { getCities } from "../server/weather-api";
+import { ApiServiceError, getCities } from "../server/weather-api";
 
-export default async function handler(
-  request: ApiRequest,
-  response: ApiResponse
-): Promise<void> {
-  if (!allowGetOnly(request, response)) return;
+function errorResponse(error: unknown): Response {
+  const status = error instanceof ApiServiceError ? error.status : 500;
+  const message =
+    error instanceof ApiServiceError
+      ? error.message
+      : "The city search service is currently unavailable.";
 
+  return Response.json(
+    { error: message },
+    {
+      status,
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    }
+  );
+}
+
+export async function GET(request: Request): Promise<Response> {
   try {
-    const query = getQueryValue(request.query.query);
-    const cities = await getCities(query, process.env.RAPIDAPI_KEY);
-    response.status(200).json(cities);
+    const url = new URL(request.url);
+    const cities = await getCities(
+      url.searchParams.get("query") || "",
+      process.env.RAPIDAPI_KEY
+    );
+
+    return Response.json(cities, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
-    sendApiError(response, error);
+    return errorResponse(error);
   }
 }

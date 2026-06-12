@@ -1,8 +1,5 @@
 import type { GeoCity, WeatherBundle } from "./types";
-
-type ErrorPayload = {
-  error?: string;
-};
+import { getApiErrorMessage } from "./utils/errors";
 
 async function requestJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(url, {
@@ -13,8 +10,13 @@ async function requestJson<T>(url: string, signal?: AbortSignal): Promise<T> {
   });
 
   if (!response.ok) {
-    const payload = (await response.json().catch(() => null)) as ErrorPayload | null;
-    throw new Error(payload?.error || "The weather service is currently unavailable.");
+    const payload = (await response.json().catch(() => null)) as unknown;
+    throw new Error(
+      getApiErrorMessage(
+        payload,
+        "The weather service is currently unavailable."
+      )
+    );
   }
 
   return response.json() as Promise<T>;
