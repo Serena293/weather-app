@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
-import citiesFunction from "./cities";
-import weatherFunction from "./weather";
+import citiesFunction from "./cities.js";
+import weatherFunction from "./weather.js";
 
 const originalRapidApiKey = process.env.RAPIDAPI_KEY;
 const originalWeatherApiKey = process.env.WEATHER_API_KEY;
