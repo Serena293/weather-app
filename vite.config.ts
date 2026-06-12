@@ -6,7 +6,7 @@ import {
   ApiServiceError,
   getCities,
   getWeatherBundle,
-} from "./server/weather-api";
+} from "./server/weather-api.js";
 
 type LocalApiKeys = {
   rapidApiKey?: string;

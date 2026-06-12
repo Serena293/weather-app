@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { GET as getCities } from "./cities";
-import { GET as getWeather } from "./weather";
+import citiesFunction from "./cities";
+import weatherFunction from "./weather";
 
 const originalRapidApiKey = process.env.RAPIDAPI_KEY;
 const originalWeatherApiKey = process.env.WEATHER_API_KEY;
@@ -14,7 +14,7 @@ describe("Vercel API functions", () => {
   it("returns a Web Response from the cities handler", async () => {
     delete process.env.RAPIDAPI_KEY;
 
-    const response = await getCities(
+    const response = await citiesFunction.fetch(
       new Request("https://example.com/api/cities?query=Edinburgh")
     );
 
@@ -28,7 +28,7 @@ describe("Vercel API functions", () => {
   it("returns a Web Response from the weather handler", async () => {
     delete process.env.WEATHER_API_KEY;
 
-    const response = await getWeather(
+    const response = await weatherFunction.fetch(
       new Request("https://example.com/api/weather?lat=55.9533&lon=-3.1883")
     );
 
