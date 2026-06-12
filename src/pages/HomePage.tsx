@@ -1,187 +1,176 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import SearchBar from "../components/SearchBar";
 import WeatherCard from "../components/WeatherCard";
-import type { CityOption } from "../types";
-import { WEATHER_API_URL, FORECAST_URL, WEATHER_API_KEY } from "../api";
-import type { WeatherEntry } from "../types";
+import { fetchWeather } from "../api";
+import type { CityOption, WeatherEntry } from "../types";
+import {
+  FAVORITES_STORAGE_KEY,
+  SESSION_STORAGE_KEY,
+  mergeEntries,
+  readEntries,
+  upsertEntry,
+  writeEntries,
+} from "../utils/storage";
+import { getGeolocationErrorMessage } from "../utils/geolocation";
+import { getLocationId } from "../utils/weather";
+
+function loadInitialEntries(): WeatherEntry[] {
+  return mergeEntries(
+    readEntries(sessionStorage, SESSION_STORAGE_KEY),
+    readEntries(localStorage, FAVORITES_STORAGE_KEY)
+  );
+}
 
 const HomePage = () => {
-  const [weatherEntries, setWeatherEntries] = useState<WeatherEntry[]>(() => {
-    const stored = sessionStorage.getItem("weatherEntries");
-    if (stored) {
-      try {
-        const parsed: WeatherEntry[] = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      } catch (e) {
-        console.error("Errore nel parsing di sessionStorage:", e);
-      }
-    }
-    return [];
-  });
+  const [weatherEntries, setWeatherEntries] =
+    useState<WeatherEntry[]>(loadInitialEntries);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    sessionStorage.setItem("weatherEntries", JSON.stringify(weatherEntries));
+    writeEntries(sessionStorage, SESSION_STORAGE_KEY, weatherEntries);
+    writeEntries(
+      localStorage,
+      FAVORITES_STORAGE_KEY,
+      weatherEntries.filter((entry) => entry.isFavorite)
+    );
   }, [weatherEntries]);
-  useEffect(() => {
-    const session = sessionStorage.getItem("weatherEntries");
-    const local = localStorage.getItem("favorites");
 
-    const sessionData: WeatherEntry[] = session ? JSON.parse(session) : [];
-    const favoriteData: WeatherEntry[] = local ? JSON.parse(local) : [];
-
-    const merged = [...sessionData];
-
-    favoriteData.forEach((fav) => {
-      if (!merged.some((entry) => entry.id === fav.id)) {
-        merged.push(fav);
-      }
-    });
-
-    setWeatherEntries(merged);
-  }, []);
-
-  const toggleFavorite = (id: number) => {
-    setWeatherEntries((prevEntries) => {
-      const updatedEntries = prevEntries.map((entry) =>
-        entry.id === id ? { ...entry, isFavorite: !entry.isFavorite } : entry
-      );
-      const favorites = updatedEntries.filter((entry) => entry.isFavorite);
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-
-      return updatedEntries;
-    });
+  const toggleFavorite = (id: string) => {
+    setWeatherEntries((entries) =>
+      entries.map((entry) =>
+        entry.id === id
+          ? { ...entry, isFavorite: !entry.isFavorite }
+          : entry
+      )
+    );
   };
 
-  const handleRemove = (id: number) => {
-    setWeatherEntries((prev) => prev.filter((entry) => entry.id !== id));
+  const handleRemove = (id: string) => {
+    setWeatherEntries((entries) =>
+      entries.filter((entry) => entry.id !== id)
+    );
+  };
+
+  const loadWeather = async (latitude: number, longitude: number) => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const { current, forecast } = await fetchWeather(latitude, longitude);
+      const newEntry: WeatherEntry = {
+        id: getLocationId(latitude, longitude),
+        weatherData: current,
+        forecastData: forecast,
+        isFavorite: false,
+      };
+
+      setWeatherEntries((entries) => upsertEntry(entries, newEntry));
+    } catch (loadError) {
+      setError(
+        loadError instanceof Error
+          ? loadError.message
+          : "Could not load weather information."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSearch = async (city: CityOption | null) => {
     if (!city) return;
-    const [lat, lon] = city.value.split(" ");
-
-    try {
-      const currentRes = await axios.get(WEATHER_API_URL, {
-        params: {
-          lat,
-          lon,
-          appid: WEATHER_API_KEY,
-          units: "metric",
-          lang: "en",
-        },
-      });
-
-      const forecastRes = await axios.get(FORECAST_URL, {
-        params: {
-          lat,
-          lon,
-          appid: WEATHER_API_KEY,
-          units: "metric",
-          lang: "en",
-        },
-      });
-
-      const newEntry: WeatherEntry = {
-        id: Date.now(),
-        weatherData: currentRes.data,
-        forecastData: forecastRes.data,
-      };
-
-      setWeatherEntries((prev) => [...prev, newEntry]);
-    } catch (error) {
-      console.error("Errore nella fetch del meteo o delle previsioni:", error);
-    }
+    await loadWeather(city.latitude, city.longitude);
   };
-  
-  //Geolocation
+
   const handleGeolocation = () => {
-  if (!navigator.geolocation) {
-    alert("Geolocation is not supported by your browser");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      const { latitude, longitude } = position.coords;
-
-      try {
-        const currentRes = await axios.get(WEATHER_API_URL, {
-          params: {
-            lat: latitude,
-            lon: longitude,
-            appid: WEATHER_API_KEY,
-            units: "metric",
-            lang: "en",
-          },
-        });
-
-        const forecastRes = await axios.get(FORECAST_URL, {
-          params: {
-            lat: latitude,
-            lon: longitude,
-            appid: WEATHER_API_KEY,
-            units: "metric",
-            lang: "en",
-          },
-        });
-
-        const newEntry: WeatherEntry = {
-          id: Date.now(),
-          weatherData: currentRes.data,
-          forecastData: forecastRes.data,
-          isFavorite: false, 
-        };
-
-        setWeatherEntries((prev) => [...prev, newEntry]);
-      } catch (error) {
-        console.error("Errore nella fetch del meteo:", error);
-        alert("Could not fetch weather for your location");
-      }
-    },
-    (error) => {
-      console.error("Geolocation error:", error);
-      alert("Unable to retrieve your location");
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by your browser.");
+      return;
     }
-  );
-};
+
+    if (!window.isSecureContext) {
+      setError(
+        "Location access requires HTTPS. Open the deployed app over HTTPS or use localhost."
+      );
+      return;
+    }
+
+    setIsLocating(true);
+    setError("");
+
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          await loadWeather(coords.latitude, coords.longitude);
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (geolocationError) => {
+        setError(getGeolocationErrorMessage(geolocationError));
+        setIsLocating(false);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 15_000,
+        maximumAge: 5 * 60 * 1000,
+      }
+    );
+  };
 
   return (
     <div className="app-wrapper d-flex flex-column min-vh-100">
-      <Navbar onUseGeolocation={handleGeolocation}/>
+      <Navbar
+        onUseGeolocation={handleGeolocation}
+        isLocating={isLocating}
+      />
+
       <div className="p-4 bg-secondary">
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} isDisabled={isLoading} />
       </div>
 
-<main className="flex-grow-1 bg-secondary">
+      <main className="flex-grow-1 bg-secondary pb-4">
+        <div className="container" aria-live="polite">
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
 
-  {weatherEntries.length === 0 ? (
-    <p className="fs-4 text-secondary text-center w-100 text-dark">
-      Select a city to see the weather 🌤️
-    </p>
-  ) : (
-   <div className="container">
-  <div className="row g-3"> 
-    {weatherEntries.map((entry) => (
-      <div className="col-12 col-md-6 col-lg-4 mb-5" key={entry.id}>
-        <WeatherCard
-          data={entry.weatherData}
-          forecast={entry.forecastData}
-          onRemove={() => handleRemove(entry.id)}
-          onToggleFavorite={() => toggleFavorite(entry.id)}
-          isFavorite={entry.isFavorite}
-        />
-      </div>
-    ))}
-  </div>
-</div>
-  )}
+          {isLoading && (
+            <div className="text-center text-dark py-3" role="status">
+              <span className="spinner-border spinner-border-sm me-2" />
+              Loading weather...
+            </div>
+          )}
 
-</main>
-
-
+          {weatherEntries.length === 0 && !isLoading ? (
+            <p className="fs-4 text-center text-dark py-3">
+              Select a city to see the weather.
+            </p>
+          ) : (
+            <div className="row g-3">
+              {weatherEntries.map((entry) => (
+                <div
+                  className="col-12 col-md-6 col-lg-4 mb-4"
+                  key={entry.id}
+                >
+                  <WeatherCard
+                    data={entry.weatherData}
+                    forecast={entry.forecastData}
+                    onRemove={() => handleRemove(entry.id)}
+                    onToggleFavorite={() => toggleFavorite(entry.id)}
+                    isFavorite={entry.isFavorite}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
 
       <Footer />
     </div>

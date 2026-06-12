@@ -1,90 +1,61 @@
-# Weather App 🌦️
+# Weather App
 
-A simple and responsive weather app built with React and TypeScript using Vite.  
-It fetches real-time weather data and works offline thanks to PWA support.
+A responsive React and TypeScript weather app built with Vite.
 
-## 🚀 Technologies Used
+## Features
 
-- **React** + **TypeScript**
-- **Vite**
-- **Bootstrap** for responsive layout
-- **OpenWeather API**
-- **RapidAPI**
-- **Progressive Web App (PWA)** for offline use
+- City search powered by GeoDB Cities
+- Current conditions and a five-day OpenWeather forecast
+- Weather data displayed in the selected city's local timezone
+- Browser geolocation
+- Favorite cities persisted across sessions
+- Installable PWA with cached app assets and recently viewed weather
+- Contact form powered by Formspree
 
-## 📱 Features
+## Local setup
 
-- Current weather information based on city input
-- Offline access via PWA
-- Mobile-first, responsive design
+1. Install dependencies:
 
-  _____________________________
-# React + TypeScript + Vite
+   ```bash
+   npm install
+   ```
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+2. Create `.env` from `.env.example` and add the API keys:
 
-Currently, two official plugins are available:
+   ```dotenv
+   RAPIDAPI_KEY=your_rapidapi_key
+   WEATHER_API_KEY=your_openweather_key
+   ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   Existing `VITE_RAPIDAPI_KEY` and `VITE_WEATHER_API_KEY` names are accepted
+   locally for backwards compatibility, but the keys are never exposed to the
+   browser bundle.
 
-## Expanding the ESLint configuration
+3. Start the development server:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+   ```bash
+   npm run dev
+   ```
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Commands
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run lint
+npm test
+npm run build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deployment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The repository includes Vercel serverless functions under `api/` and a
+`vercel.json` SPA fallback. Configure these environment variables in Vercel:
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `RAPIDAPI_KEY`
+- `WEATHER_API_KEY`
+
+Do not prefix deployment secrets with `VITE_`; Vite-prefixed variables are
+public client-side values.
+
+For another hosting provider, deploy equivalent same-origin endpoints for
+`GET /api/cities` and `GET /api/weather`.

@@ -6,7 +6,8 @@ export type CityOption = {
 };
 
 export type SearchBarProps = {
-  onSearch: (city: CityOption | null) => void;
+  onSearch: (city: CityOption | null) => void | Promise<void>;
+  isDisabled?: boolean;
 };
 
 export type GeoCity = {
@@ -21,6 +22,10 @@ export type GeoCity = {
 
 export interface WeatherData {
   name: string;
+  coord: {
+    lat: number;
+    lon: number;
+  };
   main: {
     temp: number;
     feels_like: number;
@@ -36,13 +41,17 @@ export interface WeatherData {
   wind: {
     speed: number;
   };
+  sys: {
+    country: string;
+  };
+  timezone: number;
 }
 
 export interface WeatherEntry {
-    id: number;
+  id: string;
   weatherData: WeatherData;
   forecastData: ForecastData;
-  isFavorite?: boolean;
+  isFavorite: boolean;
 }
 
 
@@ -77,7 +86,7 @@ export interface ForecastData {
   };
 }
 
- export interface WeatherCardProps {
+export interface WeatherCardProps {
   data: WeatherData | null;
   forecast: ForecastData | null;
   onRemove?: () => void;
@@ -88,4 +97,10 @@ export interface ForecastData {
 
 export type NavbarProps = {
   onUseGeolocation: () => void;
+  isLocating?: boolean;
 };
+
+export interface WeatherBundle {
+  current: WeatherData;
+  forecast: ForecastData;
+}

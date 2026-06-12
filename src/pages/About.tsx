@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const About = () => {
   const navigate = useNavigate();
   return (
-    <div className="container py-5 bg-secondary">
+    <main className="container py-5 bg-secondary">
       <h1 className="text-center mb-4">About Me</h1>
 
       <div className="row align-items-center mb-5">
@@ -21,8 +21,8 @@ const About = () => {
             My name is Serena, and I am studying to become a web developer. This
             is one of my first projects, developed using TypeScript, React with
             Vite, Bootstrap, the OpenWeather API, and RapidAPI. I also used PWA
-            technologies to ensure you can download the app on your phone and
-            use it offline. You can check out my{" "}
+            technologies so the app can be installed and previously loaded
+            content remains available offline. You can check out my{" "}
             <a
               href="https://portfolio-one-nu-17.vercel.app/"
               target="_blank"
@@ -62,7 +62,7 @@ const About = () => {
           Back to Home
         </button>
       </div>
-    </div>
+    </main>
   );
 };
 

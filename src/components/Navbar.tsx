@@ -1,29 +1,23 @@
+import { Link } from "react-router-dom";
 import type { NavbarProps } from "../types";
 
-const Navbar = ({ onUseGeolocation }: NavbarProps) => {
+const Navbar = ({ onUseGeolocation, isLocating }: NavbarProps) => {
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+    <nav className="navbar navbar-dark bg-dark" aria-label="Main navigation">
       <div className="container">
-        <a className="navbar-brand" href="/">
-          <img src="/pwa-512x512.png" alt="App logo" width={60} height={60} />
-        </a>
-             
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onUseGeolocation();
-                }}
-              >
-                📍 Use my location
-              </a>
-            </li>
-          </ul>
-        </div>
+        <Link className="navbar-brand" to="/" aria-label="Weather home">
+          <img src="/pwa-512x512.png" alt="" width={60} height={60} />
+        </Link>
 
+        <button
+          type="button"
+          className="nav-link text-white location-button"
+          onClick={onUseGeolocation}
+          disabled={isLocating}
+        >
+          {isLocating ? "Finding location..." : "Use my location"}
+        </button>
+      </div>
     </nav>
   );
 };

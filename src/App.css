@@ -1,28 +1,17 @@
-/* .my-container{
-  border: solid black 1px;
-  min-width: 100px;
-  max-width: 250px;
-  min-height: 300px;
-  max-width: 300px;
-} */
-
-/* WeatherCard styles */
-/* .scroll-container::-webkit-scrollbar {
-  display: none;
+.weather-card {
+  color: #02143c;
 }
 
-.scroll-container {
-  -ms-overflow-style: none; 
-  scrollbar-width: none;    
-} */
-
-.scroll-snap-x {
-  scroll-snap-type: x mandatory;
+.weather-card img {
+  object-fit: contain;
 }
 
 .img-size {
-  width: 350px;
-  height: 350px;
+  width: min(100%, 350px);
+  aspect-ratio: 1;
   object-fit: cover;
 }
 
+.overflow-auto {
+  scrollbar-width: thin;
+}
