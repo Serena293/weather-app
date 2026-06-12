@@ -16,6 +16,7 @@ A responsive React and TypeScript weather app built with Vite.
 
 1. Install dependencies:
 
+<<<<<<< HEAD
    ```bash
    npm install
    ```
@@ -59,3 +60,9 @@ public client-side values.
 
 For another hosting provider, deploy equivalent same-origin endpoints for
 `GET /api/cities` and `GET /api/weather`.
+=======
+  _____________________________
+Demo:
+
+https://weather-app-two-omega-52.vercel.app/
+>>>>>>> 08bce66b250a29a80b4418da4d83a428b38809cf
